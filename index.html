@@ -11,23 +11,26 @@
   header { background: #0052cc; color: white; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
   header h1 { font-size: 18px; font-weight: 600; }
   header .meta { font-size: 12px; opacity: 0.8; margin-top: 2px; }
-  .updated-badge { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 4px 10px; font-size: 12px; white-space: nowrap; }
+  .sync-info { display: flex; align-items: center; gap: 10px; }
+  .sync-badge { background: rgba(255,255,255,0.2); border-radius: 6px; padding: 4px 10px; font-size: 12px; white-space: nowrap; }
+  .refresh-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.4); color: white; border-radius: 6px; padding: 5px 12px; font-size: 12px; cursor: pointer; }
+  .refresh-btn:hover { background: rgba(255,255,255,0.25); }
 
   .toolbar { background: white; border-bottom: 1px solid #dfe1e6; padding: 10px 24px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .filter-btn { border: 1px solid #dfe1e6; background: white; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 13px; color: #42526e; transition: all 0.15s; }
+  .filter-btn { border: 1px solid #dfe1e6; background: white; border-radius: 4px; padding: 5px 12px; cursor: pointer; font-size: 13px; color: #42526e; }
   .filter-btn:hover { background: #f4f5f7; }
   .filter-btn.active { background: #0052cc; color: white; border-color: #0052cc; }
   .search-box { margin-left: auto; border: 1px solid #dfe1e6; border-radius: 4px; padding: 5px 10px; font-size: 13px; width: 200px; }
   .search-box:focus { outline: none; border-color: #0052cc; }
 
-  .main { display: flex; height: calc(100vh - 108px); overflow: hidden; }
+  .main { display: flex; height: calc(100vh - 110px); overflow: hidden; }
 
   .sidebar { width: 210px; background: white; border-right: 1px solid #dfe1e6; overflow-y: auto; flex-shrink: 0; padding-bottom: 20px; }
   .sidebar-section { padding: 14px 16px 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: #7a869a; letter-spacing: 0.5px; }
   .sidebar-item { padding: 7px 16px; cursor: pointer; border-left: 3px solid transparent; color: #42526e; font-size: 13px; display: flex; justify-content: space-between; align-items: center; gap: 4px; }
   .sidebar-item:hover { background: #f4f5f7; }
   .sidebar-item.active { border-left-color: #0052cc; background: #e9f2ff; color: #0052cc; font-weight: 500; }
-  .sidebar-item span.label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .sidebar-item .lbl { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .badge { background: #dfe1e6; color: #42526e; border-radius: 10px; padding: 1px 7px; font-size: 11px; flex-shrink: 0; }
   .sidebar-item.active .badge { background: #b3d4ff; color: #0052cc; }
 
@@ -41,7 +44,7 @@
   .progress-wrap { background: white; border-radius: 8px; padding: 14px 16px; border: 1px solid #dfe1e6; margin-bottom: 20px; }
   .progress-wrap h3 { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #42526e; }
   .progress-bar { height: 8px; background: #dfe1e6; border-radius: 4px; overflow: hidden; }
-  .progress-fill { height: 100%; background: #0052cc; border-radius: 4px; }
+  .progress-fill { height: 100%; background: #0052cc; border-radius: 4px; transition: width 0.5s; }
   .progress-label { font-size: 11px; color: #7a869a; margin-top: 4px; display: flex; justify-content: space-between; }
 
   .section-header { font-size: 13px; font-weight: 700; color: #42526e; margin: 18px 0 8px; padding-bottom: 6px; border-bottom: 2px solid #dfe1e6; display: flex; align-items: center; gap: 8px; }
@@ -50,12 +53,10 @@
   .task-list { display: flex; flex-direction: column; gap: 4px; margin-bottom: 4px; }
   .task-row { background: white; border: 1px solid #dfe1e6; border-radius: 6px; padding: 9px 14px; display: flex; align-items: flex-start; gap: 10px; }
   .task-row.overdue { border-left: 3px solid #de350b; }
-  .task-row.due-soon { border-left: 3px solid #ff8b00; }
   .task-row.done-row { opacity: 0.5; }
 
-  .chk { width: 16px; height: 16px; border: 2px solid #dfe1e6; border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; }
-  .chk:hover { border-color: #0052cc; }
-  .chk.on { background: #0052cc; border-color: #0052cc; color: white; font-size: 10px; }
+  .chk { width: 16px; height: 16px; border: 2px solid #dfe1e6; border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+  .chk.on { background: #0052cc; border-color: #0052cc; color: white; }
 
   .task-body { flex: 1; min-width: 0; }
   .task-title { font-size: 13px; color: #172b4d; line-height: 1.4; }
@@ -66,15 +67,20 @@
   .towner { background: #f4f5f7; color: #42526e; }
   .tdate { background: #fff4e5; color: #974f0c; }
   .tdate.od { background: #ffebe6; color: #de350b; }
-  .tdate.ds { background: #fff4e5; color: #ff8b00; }
   .tstatus { display: inline-block; border-radius: 3px; padding: 1px 6px; font-size: 11px; }
-  .s-todo { background: #dfe1e6; color: #42526e; }
-  .s-inprog { background: #deebff; color: #0052cc; }
-  .s-review { background: #fffae6; color: #974f0c; }
-  .s-done { background: #e3fcef; color: #006644; }
+  .s-未開始 { background: #dfe1e6; color: #42526e; }
+  .s-進行中 { background: #deebff; color: #0052cc; }
+  .s-審批中 { background: #fffae6; color: #974f0c; }
+  .s-待確認 { background: #fffae6; color: #974f0c; }
+  .s-已完成 { background: #e3fcef; color: #006644; }
 
+  .loading { text-align: center; padding: 60px 20px; color: #7a869a; }
+  .spinner { width: 32px; height: 32px; border: 3px solid #dfe1e6; border-top-color: #0052cc; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-box { background: #ffebe6; border: 1px solid #ff5630; border-radius: 8px; padding: 16px 20px; margin: 20px 0; color: #de350b; font-size: 13px; line-height: 1.7; }
+  .error-box strong { display: block; margin-bottom: 6px; font-size: 14px; }
   .empty { text-align: center; color: #7a869a; padding: 40px; }
-  .static-note { background: #fffae6; border: 1px solid #ffe380; border-radius: 6px; padding: 8px 14px; font-size: 12px; color: #974f0c; margin-bottom: 16px; }
 </style>
 </head>
 <body>
@@ -84,15 +90,18 @@
     <h1>2026PLPEX 項目跟進 Dashboard</h1>
     <div class="meta">2026年葡語國家產品及服務展｜10月21–24日｜澳門威尼斯人</div>
   </div>
-  <span class="updated-badge">更新：2026-05-09</span>
+  <div class="sync-info">
+    <span class="sync-badge" id="sync-time">讀取中...</span>
+    <button class="refresh-btn" onclick="fetchData()">↻ 刷新</button>
+  </div>
 </header>
 
 <div class="toolbar">
   <button class="filter-btn active" onclick="setStatus('all',this)">全部</button>
-  <button class="filter-btn" onclick="setStatus('todo',this)">待辦</button>
-  <button class="filter-btn" onclick="setStatus('inprog',this)">進行中</button>
-  <button class="filter-btn" onclick="setStatus('review',this)">待審批</button>
-  <button class="filter-btn" onclick="setStatus('done',this)">已完成</button>
+  <button class="filter-btn" onclick="setStatus('未開始',this)">未開始</button>
+  <button class="filter-btn" onclick="setStatus('進行中',this)">進行中</button>
+  <button class="filter-btn" onclick="setStatus('審批中',this)">審批中</button>
+  <button class="filter-btn" onclick="setStatus('已完成',this)">已完成</button>
   <button class="filter-btn" onclick="setStatus('overdue',this)">已逾期</button>
   <input class="search-box" type="text" placeholder="搜尋任務或負責人..." oninput="doSearch(this.value)">
 </div>
@@ -100,214 +109,190 @@
 <div class="main">
   <div class="sidebar">
     <div class="sidebar-section">月份</div>
-    <div class="sidebar-item active" data-m="all" onclick="setMonth('all',this)"><span class="label">全部</span><span class="badge" id="bm-all">0</span></div>
-    <div class="sidebar-item" data-m="4" onclick="setMonth('4',this)"><span class="label">4月（T-6）</span><span class="badge" id="bm-4">0</span></div>
-    <div class="sidebar-item" data-m="5" onclick="setMonth('5',this)"><span class="label">5月（T-5）</span><span class="badge" id="bm-5">0</span></div>
-    <div class="sidebar-item" data-m="6" onclick="setMonth('6',this)"><span class="label">6月（T-4）</span><span class="badge" id="bm-6">0</span></div>
-    <div class="sidebar-item" data-m="misc" onclick="setMonth('misc',this)"><span class="label">待跟進</span><span class="badge" id="bm-misc">0</span></div>
-
+    <div class="sidebar-item active" data-m="all" onclick="setMonth('all',this)"><span class="lbl">全部</span><span class="badge" id="bm-all">—</span></div>
+    <div class="sidebar-item" data-m="4月" onclick="setMonth('4月',this)"><span class="lbl">4月（T-6）</span><span class="badge" id="bm-4月">—</span></div>
+    <div class="sidebar-item" data-m="5月" onclick="setMonth('5月',this)"><span class="lbl">5月（T-5）</span><span class="badge" id="bm-5月">—</span></div>
+    <div class="sidebar-item" data-m="6月" onclick="setMonth('6月',this)"><span class="lbl">6月（T-4）</span><span class="badge" id="bm-6月">—</span></div>
+    <div class="sidebar-item" data-m="待跟進" onclick="setMonth('待跟進',this)"><span class="lbl">待跟進</span><span class="badge" id="bm-待跟進">—</span></div>
     <div class="sidebar-section">大類</div>
     <div id="cat-sidebar"></div>
-
     <div class="sidebar-section">負責人</div>
     <div id="owner-sidebar"></div>
   </div>
 
-  <div class="content">
-    <div class="static-note">此 Dashboard 為靜態展示。如需更新進度，請提供文件或指示，由 Claude 更新 TASKS.md 後重新生成。</div>
-    <div class="summary-cards" id="summary"></div>
-    <div class="progress-wrap">
-      <h3>第一階段整體進度（4–6月，共 <span id="prog-total">0</span> 項）</h3>
-      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-      <div class="progress-label"><span id="prog-text">0 / 0 項完成</span><span id="prog-pct">0%</span></div>
-    </div>
-    <div id="task-area"></div>
+  <div class="content" id="main-content">
+    <div class="loading"><div class="spinner"></div>正在讀取 Google Sheet 數據...</div>
   </div>
 </div>
 
 <script>
-const TASKS = [
-  // 4月
-  {id:'A1',title:'盤點主要供應商類別，擬定採購清單（場地、承建、攝影、翻譯、穿梭車等）',owner:'Winnie',date:'4月底',month:'4',cat:'展覽規劃及場地',status:'todo'},
-  {id:'A2',title:'邀請不少於3間合資格供應商報價（場地佈置及展位承建商）',owner:'Winnie',date:'4月底',month:'4',cat:'展覽規劃及場地',status:'todo'},
-  {id:'A3',title:'與大會指定酒店就客房預留及穿梭巴士服務進行初步洽談',owner:'Winnie/Tina',date:'4月底',month:'4',cat:'展覽規劃及場地',status:'todo'},
-  {id:'A4',title:'確定展會主題視覺方向及色彩系統，提交IPIM審批',owner:'Susanni/Tony',date:'4月中',month:'4',cat:'設計及宣傳',status:'todo'},
-  {id:'A5',title:'委託設計公司制作主KV草稿（中葡英三語版本）',owner:'Susanni',date:'4月底',month:'4',cat:'設計及宣傳',status:'todo'},
-  {id:'A6',title:'草擬參展優惠計劃初稿（早鳥優惠、豁免展位費、酒店住宿優惠等）',owner:'Amy/Tina',date:'4月底',month:'4',cat:'招展招商',status:'todo'},
-  {id:'A7',title:'草擬參會優惠計劃初稿（特邀買家計劃：免費住宿、配對優先等）',owner:'Amy/吳子悅',date:'4月底',month:'4',cat:'招展招商',status:'todo'},
-  {id:'A8',title:'召開同期活動內部啟動會，確認G100酒單評選、咖啡豆評選、論壇等活動框架',owner:'Susanni/Tony',date:'4月底',month:'4',cat:'論壇及同期活動',status:'todo'},
-  {id:'A9',title:'啟動「一會展兩地」活動方案討論，初步確認橫琴聯動場次',owner:'Susanni/萬嘉儀',date:'4月底',month:'4',cat:'論壇及同期活動',status:'todo'},
-  // 5月
-  {id:'B1',title:'完成主要供應商比價，呈交供應商建議名單予IPIM審批（含財務預算初估）',owner:'Winnie/Tina',date:'5月中',month:'5',cat:'展覽規劃及場地',status:'todo'},
-  {id:'B2',title:'與確定供應商舉行第一次籌備會議（場地、承建、科技系統）',owner:'Winnie',date:'5月底',month:'5',cat:'展覽規劃及場地',status:'todo'},
-  {id:'B3',title:'落實大會旅行社，確認代表團接待及嘉賓機票統籌安排',owner:'Winnie/Tina',date:'5月底',month:'5',cat:'展覽規劃及場地',status:'todo'},
-  {id:'B11',title:'啟動大會網站開發：確定功能需求（三語介面、手機版、配對系統接口），提交Demo予IPIM',owner:'Winnie/Susanni',date:'5月中',month:'5',cat:'展覽規劃及場地',status:'todo'},
-  {id:'B12',title:'完成網站整體架構設計（首頁、展商專區、買家專區、報名頁面）',owner:'Winnie',date:'5月底',month:'5',cat:'展覽規劃及場地',status:'todo'},
-  {id:'B4',title:'提交主KV定稿予IPIM審批，確定正式視覺識別系統（Logo、字體、配色）',owner:'Susanni',date:'5月中',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B5',title:'將主KV延伸至各宣傳物料模板（邀請函、EDM、社交媒體背景板）',owner:'Susanni/Tony',date:'5月底',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B9',title:'設計大會宣傳品初稿：場刊封面、易拉架、背景板、大會手冊框架',owner:'Susanni/Tony',date:'5月底',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B10',title:'設計參展商邀請手冊（中葡英三語電子版EDM）',owner:'Susanni/Amy',date:'5月底',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B13',title:'建立大會官方社交媒體賬號（微信公眾號、Facebook、Instagram）並統一封面設計',owner:'Susanni/Tony',date:'5月初',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B14',title:'制定4-10月社交媒體內容計劃（每月發帖頻次、主題、語言）',owner:'Susanni/Tony',date:'5月底',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B15',title:'發布大會宣傳首篇內容（展會主題公告、主視覺揭曉），啟動線上預熱（三語同步）',owner:'Susanni',date:'5月底',month:'5',cat:'設計及宣傳',status:'todo'},
-  {id:'B6',title:'提交參展優惠計劃終稿予IPIM審批（含早鳥截止日期、優惠條款，中葡英三語）',owner:'Amy/Tina',date:'5月中',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B7',title:'啟動早鳥參展招募，向目標展商發送優惠資訊及參展意向調查（目標30個意向）',owner:'Amy/Catrina',date:'5月下旬',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B8',title:'落實特邀買家計劃資格及申請流程，建立買家審核機制',owner:'吳子悅/Amy',date:'5月底',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B16',title:'草擬正式邀請函（中英葡三語版本），提交IPIM審批',owner:'Amy/Susanni',date:'5月中',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B17',title:'按目標客商資料庫完成分類，確定首批邀請名單（參展商及買家各500個目標單位）',owner:'Amy/吳子悅/萬嘉儀',date:'5月底',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B18',title:'向潛在參展商及商協會發出首批邀請函及展會資訊（微信、WhatsApp、電郵）',owner:'Amy/Catrina',date:'5月下旬',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B19',title:'確定境外路演計劃（不少於3次，含西班牙及葡語國家）：日期、地點及合作機構',owner:'萬嘉儀/Susanni',date:'5月底',month:'5',cat:'招展招商',status:'todo'},
-  {id:'B20',title:'完成G100葡語國家推薦酒單評選方案並提交IPIM審批',owner:'Susanni/Tony',date:'5月底',month:'5',cat:'論壇及同期活動',status:'todo'},
-  {id:'B21',title:'完成咖啡豆評選及頒獎禮活動方案並提交IPIM審批',owner:'Susanni/Tony',date:'5月底',month:'5',cat:'論壇及同期活動',status:'todo'},
-  // 6月
-  {id:'C1',title:'完成主要供應商合約簽訂（場地、承建、大會攝影、科技系統供應商）',owner:'Winnie/Tina',date:'6月中',month:'6',cat:'展覽規劃及場地',status:'todo'},
-  {id:'C2',title:'召開第二次供應商籌備會議，確認各供應商工作時間表及交付標準',owner:'Winnie',date:'6月底',month:'6',cat:'展覽規劃及場地',status:'todo'},
-  {id:'C3',title:'落實場地保險方案，提交初步方案予IPIM審批',owner:'Winnie/Tina',date:'6月底',month:'6',cat:'展覽規劃及場地',status:'todo'},
-  {id:'C10',title:'完成大會網站Beta版本開發，進行內部測試（功能、三語顯示、手機版），提交IPIM試用審批',owner:'Winnie',date:'6月底',month:'6',cat:'展覽規劃及場地',status:'todo'},
-  {id:'C11',title:'開發電子報名系統，並完成與IPIM商業配對平台的數據接口測試',owner:'Winnie',date:'6月底',month:'6',cat:'展覽規劃及場地',status:'todo'},
-  {id:'C4',title:'主KV定稿獲批後，交付各供應商用於宣傳品製作，建立KV文件管理規範',owner:'Susanni',date:'6月初',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C7',title:'完成大會場刊設計稿（中英葡三語，含廣告位規格說明），提交IPIM審批',owner:'Susanni/Tony',date:'6月底',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C8',title:'制作展前預熱宣傳短片腳本（30秒及60秒版本），提交審批',owner:'Susanni/Tony',date:'6月底',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C9',title:'完成展商邀請印刷品設計定稿（A4邀請函、展位說明卡）',owner:'Amy/Susanni',date:'6月底',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C12',title:'按計劃持續更新社交媒體（每週最少2篇），發布展商招募及優惠計劃內容（三語同步）',owner:'Susanni/Tony',date:'每週',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C13',title:'完成6月社交媒體推廣計劃，啟動第一輪廣告投放（目標大灣區及葡語市場）',owner:'Susanni',date:'6月底',month:'6',cat:'設計及宣傳',status:'todo'},
-  {id:'C5',title:'正式啟動招展報名，收集及整理首批參展報名（含展位意向及特裝設計要求）',owner:'Amy/Catrina',date:'6月初',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C6',title:'啟動特邀買家報名，首輪邀請大灣區、東南亞買家申請',owner:'吳子悅',date:'6月底',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C14',title:'完成第二輪邀請函發送（針對未回覆單位跟進），整理RSVP數據報告',owner:'Amy/Catrina',date:'6月中',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C15',title:'啟動論壇及同期活動嘉賓邀請函發送（主題演講嘉賓、政府代表）',owner:'Susanni/萬嘉儀',date:'6月底',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C16',title:'確定第一次境外路演行程細節（城市、合作機構確認、宣傳材料準備）',owner:'萬嘉儀/Susanni',date:'6月底',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C17',title:'準備路演宣傳物料：展會簡介冊、展位申請表、優惠計劃說明（三語）',owner:'Susanni/Amy',date:'6月底',month:'6',cat:'招展招商',status:'todo'},
-  {id:'C18',title:'完成同期活動整體計劃表（含時間、場地、主辦/協辦機構、人數估算），提交IPIM審批',owner:'Susanni/Tony',date:'6月底',month:'6',cat:'論壇及同期活動',status:'todo'},
-  {id:'C19',title:'確定「一會展兩地」（橫琴聯動）活動方案，啟動場地及合作機構洽談',owner:'Susanni/萬嘉儀',date:'6月底',month:'6',cat:'論壇及同期活動',status:'todo'},
-  {id:'C20',title:'完成商業配對預配對活動框架設計，確認配對系統技術規格',owner:'黃天芙/Winnie',date:'6月底',month:'6',cat:'論壇及同期活動',status:'todo'},
-  // 待跟進
-  {id:'M1',title:'確認非官方活動申報流程（是否需要入信申請，與MIF相同流程？）',owner:'Kelvin',date:'待確認',month:'misc',cat:'行政及財務',status:'todo'},
-  {id:'M3',title:'確認大會日程（三展聯合）並完成英葡翻譯',owner:'Susanni',date:'待確認',month:'misc',cat:'行政及財務',status:'todo'},
-  {id:'M8',title:'確認去年PR公司為Heyco，評估是否沿用',owner:'Kelvin',date:'待確認',month:'misc',cat:'行政及財務',status:'todo'},
-  {id:'M2',title:'取得場地清單：各場地規模、設備、平面圖，建立場地規劃表',owner:'Kelvin/Winnie',date:'待確認',month:'misc',cat:'展覽規劃及場地',status:'todo'},
-  {id:'M7',title:'品鑑區：確認面積、設備，是否開放展商申請，是否納入大會活動日程',owner:'Kelvin',date:'待確認',month:'misc',cat:'展覽規劃及場地',status:'todo'},
-  {id:'M4',title:'農業產業鏈論壇：出初步方案及人選建議（截止：8月）',owner:'Susanni/Tony',date:'8月前',month:'misc',cat:'論壇及同期活動',status:'todo'},
-  {id:'M5',title:'首發項目發佈會：出初步方案及嘉賓邀請',owner:'Susanni/Tony',date:'待確認',month:'misc',cat:'論壇及同期活動',status:'todo'},
-  {id:'M6',title:'咖啡豆比賽及紅酒評選：通知展商招募，與PR公司協調（注意：高度數酒類入澳須繳稅）',owner:'Susanni/Tony',date:'待確認',month:'misc',cat:'論壇及同期活動',status:'todo'},
-];
-
+const SHEET_ID = '1MN0AYLEMjoux-pfooXafnn4_yRciGn6I0sXM1aiHLx0';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/' + SHEET_ID + '/export?format=csv&gid=0';
 const CATS = ['招展招商','論壇及同期活動','設計及宣傳','展覽規劃及場地','行政及財務'];
 
+let TASKS = [];
 let fStatus = 'all', fMonth = 'all', fCat = 'all', fOwner = 'all', fSearch = '';
 
-function isOverdue(t) { return t.status!=='done' && t.date && t.date.includes('4月'); }
-function isDueSoon(t) { return t.status!=='done' && t.date && (t.date==='5月初'||t.date==='5月中'); }
-function slabel(s) { return {todo:'待辦',inprog:'進行中',review:'待審批',done:'已完成'}[s]||s; }
+function splitCSVLine(line) {
+  const result = []; let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur);
+  return result;
+}
+
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = splitCSVLine(lines[0]).map(h => h.trim().replace(/^"|"$/g,''));
+  const rows = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = splitCSVLine(lines[i]);
+    if (!vals[0] || !vals[0].trim()) continue;
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (vals[idx]||'').trim().replace(/^"|"$/g,''); });
+    rows.push(obj);
+  }
+  return rows;
+}
+
+async function fetchData() {
+  document.getElementById('sync-time').textContent = '讀取中...';
+  try {
+    const res = await fetch(CSV_URL + '&t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const rows = parseCSV(text);
+    if (!rows.length) throw new Error('試算表為空或格式不符');
+    TASKS = rows.map(r => ({
+      id: r['ID'] || '',
+      month: r['月份'] || '',
+      cat: r['大類'] || '',
+      title: r['任務'] || '',
+      owner: r['負責人'] || '',
+      date: r['截止日期'] || '',
+      status: r['狀態'] || '未開始',
+      note: r['備註'] || '',
+    }));
+    const now = new Date();
+    document.getElementById('sync-time').textContent =
+      '同步：' + now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+    render();
+  } catch(e) {
+    document.getElementById('sync-time').textContent = '讀取失敗';
+    document.getElementById('main-content').innerHTML =
+      '<div class="error-box"><strong>無法讀取 Google Sheet 數據</strong>' +
+      '請確認：<br>1. Google Sheet 已設為「知道連結的人可查看」<br>' +
+      '2. 表頭格式：ID / 月份 / 大類 / 任務 / 負責人 / 截止日期 / 狀態 / 備註<br><br>錯誤：' + e.message + '</div>';
+  }
+}
+
+function isOverdue(t) { return t.status !== '已完成' && t.date && t.date.includes('4月'); }
 
 function getFiltered() {
   return TASKS.filter(t => {
-    if (fStatus!=='all') {
-      if (fStatus==='overdue') { if (!isOverdue(t)) return false; }
-      else if (t.status!==fStatus) return false;
+    if (fStatus !== 'all') {
+      if (fStatus === 'overdue') { if (!isOverdue(t)) return false; }
+      else if (t.status !== fStatus) return false;
     }
-    if (fMonth!=='all' && t.month!==fMonth) return false;
-    if (fCat!=='all' && t.cat!==fCat) return false;
-    if (fOwner!=='all' && !t.owner.includes(fOwner)) return false;
-    if (fSearch && !t.title.toLowerCase().includes(fSearch) && !t.owner.toLowerCase().includes(fSearch) && !t.id.toLowerCase().includes(fSearch)) return false;
+    if (fMonth !== 'all' && t.month !== fMonth) return false;
+    if (fCat !== 'all' && t.cat !== fCat) return false;
+    if (fOwner !== 'all' && !t.owner.includes(fOwner)) return false;
+    if (fSearch && !t.title.toLowerCase().includes(fSearch) &&
+        !t.owner.toLowerCase().includes(fSearch) && !t.id.toLowerCase().includes(fSearch)) return false;
     return true;
   });
 }
 
-function setStatus(s,btn) { fStatus=s; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
-function setMonth(m,el) { fMonth=m; document.querySelectorAll('[data-m]').forEach(b=>b.classList.remove('active')); el.classList.add('active'); render(); }
-function setCat(c) { fCat=fCat===c?'all':c; render(); }
-function setOwner(o) { fOwner=fOwner===o?'all':o; render(); }
-function doSearch(q) { fSearch=q.toLowerCase().trim(); render(); }
+function setStatus(s, btn) { fStatus = s; document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); render(); }
+function setMonth(m, el) { fMonth = m; document.querySelectorAll('[data-m]').forEach(b=>b.classList.remove('active')); el.classList.add('active'); render(); }
+function setCat(c) { fCat = fCat===c?'all':c; render(); }
+function setOwner(o) { fOwner = fOwner===o?'all':o; render(); }
+function doSearch(q) { fSearch = q.toLowerCase().trim(); render(); }
 
 function render() {
+  if (!TASKS.length) return;
   const vis = getFiltered();
-  const total46 = TASKS.filter(t=>t.month!=='misc').length;
-  const done = TASKS.filter(t=>t.status==='done').length;
-  const inprog = TASKS.filter(t=>t.status==='inprog').length;
-  const review = TASKS.filter(t=>t.status==='review').length;
+  const main = TASKS.filter(t => t.month !== '待跟進');
+  const total = main.length;
+  const done = TASKS.filter(t => t.status==='已完成').length;
+  const inprog = TASKS.filter(t => t.status==='進行中').length;
+  const review = TASKS.filter(t => t.status==='審批中').length;
   const overdue = TASKS.filter(isOverdue).length;
+  const pct = total > 0 ? Math.round(done/total*100) : 0;
 
-  document.getElementById('summary').innerHTML = `
-    <div class="card"><div class="num" style="color:#0052cc">${TASKS.length}</div><div class="lbl">總任務數</div></div>
-    <div class="card"><div class="num" style="color:#00875a">${done}</div><div class="lbl">已完成</div></div>
-    <div class="card"><div class="num" style="color:#0052cc">${inprog}</div><div class="lbl">進行中</div></div>
-    <div class="card"><div class="num" style="color:#974f0c">${review}</div><div class="lbl">待審批</div></div>
-    <div class="card"><div class="num" style="color:#de350b">${overdue}</div><div class="lbl">已逾期</div></div>
-  `;
-
-  const pct = total46>0 ? Math.round(done/total46*100) : 0;
-  document.getElementById('prog-total').textContent = total46;
-  document.getElementById('prog-fill').style.width = pct+'%';
-  document.getElementById('prog-text').textContent = done+' / '+total46+' 項完成';
-  document.getElementById('prog-pct').textContent = pct+'%';
-
-  // Month badges
-  ['all','4','5','6','misc'].forEach(m => {
+  ['all','4月','5月','6月','待跟進'].forEach(m => {
     const el = document.getElementById('bm-'+m);
     if (el) el.textContent = m==='all' ? TASKS.length : TASKS.filter(t=>t.month===m).length;
   });
 
-  // Cat sidebar
   document.getElementById('cat-sidebar').innerHTML = CATS.map(c => {
     const cnt = TASKS.filter(t=>t.cat===c).length;
-    return `<div class="sidebar-item ${fCat===c?'active':''}" onclick="setCat('${c}')"><span class="label">${c}</span><span class="badge">${cnt}</span></div>`;
+    return '<div class="sidebar-item '+(fCat===c?'active':'')+'" onclick="setCat(\''+c+'\')">' +
+      '<span class="lbl">'+c+'</span><span class="badge">'+cnt+'</span></div>';
   }).join('');
 
-  // Owner sidebar
   const owners = [...new Set(TASKS.flatMap(t=>t.owner.split('/').map(o=>o.trim())))].sort();
   document.getElementById('owner-sidebar').innerHTML = owners.map(o => {
     const cnt = TASKS.filter(t=>t.owner.includes(o)).length;
-    return `<div class="sidebar-item ${fOwner===o?'active':''}" onclick="setOwner('${o}')"><span class="label">${o}</span><span class="badge">${cnt}</span></div>`;
+    return '<div class="sidebar-item '+(fOwner===o?'active':'')+'" onclick="setOwner(\''+o+'\')">' +
+      '<span class="lbl">'+o+'</span><span class="badge">'+cnt+'</span></div>';
   }).join('');
 
-  // Task area — group by month > cat
   const grouped = {};
   vis.forEach(t => {
-    const mLabel = t.month==='misc' ? '待跟進' : t.month+'月';
-    const key = mLabel + '｜' + t.cat;
+    const key = t.month + '｜' + t.cat;
     if (!grouped[key]) grouped[key] = [];
     grouped[key].push(t);
   });
 
-  const mOrder = k => k.startsWith('4')?0 : k.startsWith('5')?1 : k.startsWith('6')?2 : 3;
-  const catOrder = c => CATS.indexOf(c);
+  const mOrd = k => k.startsWith('4')?0:k.startsWith('5')?1:k.startsWith('6')?2:3;
+  const cOrd = c => { const i=CATS.indexOf(c); return i>=0?i:99; };
   const keys = Object.keys(grouped).sort((a,b) => {
-    const mo = mOrder(a) - mOrder(b);
-    if (mo!==0) return mo;
-    const [,ca] = a.split('｜'); const [,cb] = b.split('｜');
-    return catOrder(ca) - catOrder(cb);
+    const mo = mOrd(a)-mOrd(b); if(mo!==0) return mo;
+    return cOrd(a.split('｜')[1]) - cOrd(b.split('｜')[1]);
   });
 
-  if (!keys.length) {
-    document.getElementById('task-area').innerHTML = '<div class="empty">沒有符合條件的任務</div>';
-    return;
-  }
-
-  let html = '';
+  let tasksHTML = !keys.length ? '<div class="empty">沒有符合條件的任務</div>' : '';
   keys.forEach(k => {
     const items = grouped[k];
-    html += `<div class="section-header">${k} <span class="section-count">${items.length} 項</span></div><div class="task-list">`;
+    tasksHTML += '<div class="section-header">'+k+' <span class="section-count">'+items.length+' 項</span></div><div class="task-list">';
     items.forEach(t => {
-      const od = isOverdue(t), ds = isDueSoon(t);
-      html += `<div class="task-row ${t.status==='done'?'done-row':''} ${od?'overdue':ds?'due-soon':''}">
-        <div class="chk ${t.status==='done'?'on':''}">${t.status==='done'?'✓':''}</div>
-        <div class="task-body">
-          <div class="task-title">${t.title}</div>
-          <div class="task-meta">
-            <span class="tag tid">${t.id}</span>
-            <span class="tag towner">${t.owner}</span>
-            <span class="tag tdate ${od?'od':ds?'ds':''}">${t.date}</span>
-            <span class="tstatus s-${t.status}">${slabel(t.status)}</span>
-          </div>
-        </div>
-      </div>`;
+      const od = isOverdue(t), isDone = t.status==='已完成';
+      tasksHTML += '<div class="task-row '+(isDone?'done-row':'')+(od?' overdue':'')+'">'+
+        '<div class="chk '+(isDone?'on':'')+'">'+( isDone?'✓':'' )+'</div>'+
+        '<div class="task-body">'+
+        '<div class="task-title">'+t.title+(t.note?' <span style="color:#7a869a;font-size:11px">— '+t.note+'</span>':'')+'</div>'+
+        '<div class="task-meta">'+
+        '<span class="tag tid">'+t.id+'</span>'+
+        '<span class="tag towner">'+t.owner+'</span>'+
+        '<span class="tag tdate '+(od?'od':'')+'">'+t.date+'</span>'+
+        '<span class="tstatus s-'+t.status+'">'+t.status+'</span>'+
+        '</div></div></div>';
     });
-    html += '</div>';
+    tasksHTML += '</div>';
   });
-  document.getElementById('task-area').innerHTML = html;
+
+  document.getElementById('main-content').innerHTML =
+    '<div class="summary-cards">'+
+    '<div class="card"><div class="num" style="color:#0052cc">'+TASKS.length+'</div><div class="lbl">總任務數</div></div>'+
+    '<div class="card"><div class="num" style="color:#00875a">'+done+'</div><div class="lbl">已完成</div></div>'+
+    '<div class="card"><div class="num" style="color:#0052cc">'+inprog+'</div><div class="lbl">進行中</div></div>'+
+    '<div class="card"><div class="num" style="color:#974f0c">'+review+'</div><div class="lbl">審批中</div></div>'+
+    '<div class="card"><div class="num" style="color:#de350b">'+overdue+'</div><div class="lbl">已逾期</div></div>'+
+    '</div>'+
+    '<div class="progress-wrap"><h3>第一階段整體進度（4–6月，共 '+total+' 項）</h3>'+
+    '<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>'+
+    '<div class="progress-label"><span>'+done+' / '+total+' 項完成</span><span>'+pct+'%</span></div></div>'+
+    tasksHTML;
 }
 
-render();
+fetchData();
+setInterval(fetchData, 300000);
 </script>
 </body>
 </html>
